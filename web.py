@@ -28,7 +28,7 @@ def background_thread(args):
         values = data.split(',')   
         print(values[0])
         print(values[1])
-        socketio.sleep(0.01)
+        #socketio.sleep(0.01)
         count += 1
         socketio.emit('my_response',
                       {'data': values[0],'data2': values[1], 'count': count, 'time':cas},
