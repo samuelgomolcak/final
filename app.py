@@ -6,4 +6,9 @@ ser.baudrate=9600
 
 while True:
     read_ser=ser.readline()
-    print(read_ser)
+    #read_ser='1,2'
+    values = read_ser.split(',')
+    
+    print(values[0])
+    print(values[1])
+    
