@@ -23,15 +23,18 @@ thread_lock = Lock()
 def background_thread(args):
     count = 0             
     while True:
+        if args:
+          A = dict(args).get('A')
+        else:
+          A = 1 
+        #print A
+        #print args
         cas = time.time()
         data = ser.readline()
-        values = data.split(',')   
-        print(values[0])
-        print(values[1])
         socketio.sleep(0.01)
         count += 1
         socketio.emit('my_response',
-                      {'data': values[0],'data2': values[1], 'count': count, 'time':cas},
+                      {'data': data, 'count': count, 'time':cas},
                       namespace='/test')  
   
 @socketio.on('my_event', namespace='/test')
@@ -51,7 +54,7 @@ def test_connect():
 
 @app.route('/')
 def index():
-    return render_template('tabs.html', async_mode=socketio.async_mode)
+    return render_template('index.html', async_mode=socketio.async_mode)
 
 @socketio.on('disconnect_request', namespace='/test')
 def disconnect_request():
