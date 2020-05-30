@@ -13,140 +13,143 @@
    <script src="static/gauge.min.js"></script>
 
     <script>
-      
-        $(document).ready(function() {
-          
-      var x = new Array();
-      var y = new Array();
-      var y2 = new Array();
-      var trace;
-      var layout;
-      var trace2;
-      
-      var gauge = new RadialGauge({
-          renderTo: 'canvasID',
-          width: 300,
-          height: 300,
-          units: "sin(x)",
-          minValue: -1,
-          maxValue: 1,
-          majorTicks: [
-              "-1",
-              "-0.8",
-              "-0.6",
-              "-0.4",
-              "-0.2",
-              "0",
-              "0.2",
-              "0.4",
-              "0.6",
-              "0.8",
-              "1.0"
-          ],
-          minorTicks: 2,
-          strokeTicks: true,
-          highlights: [
-              {
-                  "from": -1,
-                  "to": 1,
-                  "color": "rgba(200, 50, 50, .75)"
-              }
-          ],
-          colorPlate: "#fff",
-          borderShadowWidth: 0,
-          borders: false,
-          needleType: "arrow",
-          needleWidth: 2,
-          needleCircleSize: 7,
-          needleCircleOuter: true,
-          needleCircleInner: false,
-          animationDuration: 0,
-          animationRule: "linear"
-      });
-      gauge.value = "0";
-      gauge.draw();
-      
-          namespace = '/test';
-          var socket = null;
-        $('form#emit').hide();
-          $('form#emit').submit(function(event) {
-              socket.emit('my_event', {value: $('#emit_value').val()});
-              return false; });
-          
-          $("#button").click(function(){
-            vec = $("#button");
-            if(vec.val() == "start"){
-                        $('form#emit').show();
-                socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
-                socket.on('connect', function() {
-                    socket.emit('my_event', {data: 'I\'m connected!', value: 1});
-                });
-    
-                socket.on('my_response', function(msg) {
-                    console.log(msg.data);
-                    if(msg.data == "Connected" || msg.data == "Disconnected"){
-                        $("#log").append(msg.data+"<br>");                        
-                    }else if(msg.ampl == 1){
-                        $("#log").append("Amplituda: "+msg.data+"<br>");                        
-                    }else{
-                        $('#log').append('Poradie: '+msg.count+' \tPrvy signal: '+msg.data+' \tDruhy signal:'+msg.data2+'<br>').html();
-                    }
-                    
-                    
-                    //prva + stvrta ulhoa
-                      x.push(parseFloat(msg.time));
-                      y2.push(parseFloat(msg.data2));
-                      y.push(parseFloat(msg.data));
-                      trace = {
-                      x: x,
-                      y: y,
-                      name:"Prvy signal"
-                              };
-                      
-                      trace2 = {
-                      x: x,
-                      y: y2,
-                      name:"Druhy signal"
-                              };   
-                                          
-                      layout = {
-                      title: 'Priebeh Signalov',
-                      xaxis: {
-                      title: 'Cas',
-                              },
-                      yaxis: {
-                      title: 'Napatie',
-                      //range: [-1,1]
-          }
-        };
-        
-        console.log(trace);
-        var traces = new Array();
-        traces.push(trace);
-        traces.push(trace2);        
-        Plotly.newPlot($('#plotdiv')[0], traces, layout); 
-        
-        //uloha 2
-                gauge.value = msg.data;                
+      $(document).ready(function() {
 
-               });
-                vec.val("stop")
-                vec.text("Stop");
-            }else{
-                $('form#emit').hide();
-                socket.emit('disconnect_request');
-                vec.val("start");
-                vec.text("Start");
-            }
-          })
-          
-          $(function() {
-            $("#tabs").tabs({
-                event: "mouseover"
+    var x = new Array();
+    var y = new Array();
+    var y2 = new Array();
+    var trace;
+    var layout;
+    var trace2;
+
+    var gauge = new RadialGauge({
+        renderTo: 'canvasID',
+        width: 300,
+        height: 300,
+        units: "sin(x)",
+        minValue: -1,
+        maxValue: 1,
+        majorTicks: [
+            "-1",
+            "-0.8",
+            "-0.6",
+            "-0.4",
+            "-0.2",
+            "0",
+            "0.2",
+            "0.4",
+            "0.6",
+            "0.8",
+            "1.0"
+        ],
+        minorTicks: 2,
+        strokeTicks: true,
+        highlights: [{
+            "from": -1,
+            "to": 1,
+            "color": "rgba(200, 50, 50, .75)"
+        }],
+        colorPlate: "#fff",
+        borderShadowWidth: 0,
+        borders: false,
+        needleType: "arrow",
+        needleWidth: 2,
+        needleCircleSize: 7,
+        needleCircleOuter: true,
+        needleCircleInner: false,
+        animationDuration: 0,
+        animationRule: "linear"
+    });
+    gauge.value = "0";
+    gauge.draw();
+
+    namespace = '/test';
+    var socket = null;
+    $('form#emit').hide();
+    $('form#emit').submit(function(event) {
+        socket.emit('my_event', {
+            value: ($('#emit_value').val())
+        });
+        return false;
+    });
+
+    $("#button").click(function() {
+        vec = $("#button");
+        if (vec.val() == "start") {
+            $('form#emit').show();
+            socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+            socket.on('connect', function() {
+                socket.emit('my_event', {
+                    data: 'I\'m connected!',
+                    value: "0"
+                });
             });
+
+            socket.on('my_response', function(msg) {
+                console.log(msg.data);
+                if (msg.data == "Connected" || msg.data == "Disconnected") {
+                    $("#log").append(msg.data + "<br>");
+                } else if (msg.ampl == 1) {
+                    $("#log").append("Amplituda: " + msg.data + "<br>");
+                } else {
+                    $('#log').append('Poradie: ' + msg.count + ' \tPrvy signal: ' + msg.data + ' \tDruhy signal:' + msg.data2 + '<br>').html();
+                }
+
+
+                //prva + stvrta ulhoa
+                x.push(parseFloat(msg.time));
+                y2.push(parseFloat(msg.data2));
+                y.push(parseFloat(msg.data));
+                trace = {
+                    x: x,
+                    y: y,
+                    name: "Prvy signal"
+                };
+
+                trace2 = {
+                    x: x,
+                    y: y2,
+                    name: "Druhy signal"
+                };
+
+                layout = {
+                    title: 'Priebeh Signalov',
+                    xaxis: {
+                        title: 'Cas',
+                    },
+                    yaxis: {
+                        title: 'Napatie',
+                        //range: [-1,1]
+                    }
+                };
+
+                console.log(trace);
+                var traces = new Array();
+                traces.push(trace);
+                traces.push(trace2);
+                Plotly.newPlot($('#plotdiv')[0], traces, layout);
+
+                //uloha 2
+                gauge.value = msg.data;
+
+            });
+            vec.val("stop")
+            vec.text("Stop");
+        } else {
+            $('form#emit').hide();
+            socket.emit('disconnect_request');
+            vec.val("start");
+            vec.text("Start");
+        }
+    })
+
+    $(function() {
+        $("#tabs").tabs({
+            event: "mouseover"
         });
-        
-        });
+    });
+
+});
     </script>
 </head>
 
