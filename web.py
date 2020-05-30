@@ -25,22 +25,22 @@ def background_thread(args):
     A=0
     i=0
     while True:
+        #ser.write(str(int(9)))
+        socketio.sleep(0.5)
         if dict(args).get('A') is not None:
            A = dict(args).get('A')
            A=int(A)
-        print(A)
-        f=type(A)
-        print(f)
         if A==1 or A==2 or A==3 or A==4 or A==5:
             if i==0 or i!=A:
                 ser.write(str(A))
                 i=A
+                print(A)
             cas = time.time()
+            ser.write(str(int(9)))
             data = ser.readline()
             values = data.split(',')   
             print(values[0])
             print(values[1])
-            socketio.sleep(0.1)
             count += 1
             socketio.emit('my_response',
                             {'data': values[0],'data2': values[1], 'count': count, 'time':cas},

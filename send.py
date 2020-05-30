@@ -3,11 +3,11 @@ import time
 
 ser=serial.Serial("/dev/ttyS1",9600)
 ser.baudrate=9600
-A = None
-c=int(A)
 
+A=2
 
-x=1
-while True:   
-    ser.write("%d" %x)
-    time.sleep(0.1)
+ser.write(str(A))
+
+# while True:   
+#     ser.write("%d" %x)
+#     time.sleep(0.1)
