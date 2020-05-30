@@ -73,6 +73,8 @@ def background_thread(args):
                     print (str(dataList))
                     fuj = str(dataList).replace("'", "\"")
                     print fuj
+                    textak = open("static/files/data.txt","a+")
+                    textak.write("%s\r\n" %fuj)
                     cursor = db.cursor()
                     cursor.execute("SELECT count(id) FROM graph")
                     maxid = cursor.fetchone()
@@ -100,6 +102,12 @@ def test_connect():
         if thread is None:
             thread = socketio.start_background_task(target=background_thread, args=session._get_current_object())
     emit('my_response', {'data': 'Connected', 'count': 0})
+
+@app.route('/read/<string:num>',methods=['GET', 'POST'])
+def readmyfile(num):
+    textak = open("static/files/data.txt","r")
+    rows = textak.readlines()
+    return rows[int(num)-1]
 
 @app.route('/db')
 def db():
