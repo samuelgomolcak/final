@@ -39,10 +39,10 @@ def background_thread(args):
     db = MySQLdb.connect(host=myhost,user=myuser,passwd=mypasswd,db=mydb)
     while True:
         #ser.write(str(int(9)))
-        socketio.sleep(0.5)
+        socketio.sleep(2)
         if dict(args).get('A') is not None:
            A = dict(args).get('A')
-           A=int(A)
+           A = int(A)
         dbV = dict(args).get('db_value')
         if A==1 or A==2 or A==3 or A==4 or A==5:
             if dbV == 'start':
@@ -54,8 +54,8 @@ def background_thread(args):
                 ser.write(str(int(9)))
                 data = ser.readline()
                 values = data.split(',')   
-                print(values[0])
-                print(values[1])
+                #print(values[0])
+                #print(values[1])
                 count += 1
                 dataCounter +=1
             
@@ -70,9 +70,9 @@ def background_thread(args):
                 dataList.append(dataDict)
                 
                 if len(dataList)>0:
-                    print (str(dataList))
+                    #print (str(dataList))
                     fuj = str(dataList).replace("'", "\"")
-                    print fuj
+                    #print fuj
                     textak = open("static/files/data.txt","a+")
                     textak.write("%s\r\n" %fuj)
                     cursor = db.cursor()
@@ -94,6 +94,10 @@ def test_message(message):
     session['A'] = message['value']    
     emit('my_response',
          {'data': message['value'], 'count': session['receive_count'], 'ampl':1})
+    
+#@socketio.on('send_data', namespace='/test')
+#def message(message):
+   # print("ok")
     
 @socketio.on('connect', namespace='/test')
 def test_connect():

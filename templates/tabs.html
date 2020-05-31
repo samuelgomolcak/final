@@ -14,7 +14,7 @@
 
     <script>
       $(document).ready(function() {
-
+    //var pole = new Array();
     var x = new Array();
     var y = new Array();
     var y2 = new Array();
@@ -26,27 +26,28 @@
         renderTo: 'canvasID',
         width: 300,
         height: 300,
-        units: "sin(x)",
-        minValue: -1,
-        maxValue: 1,
+        units: "Prvy signal",
+        minValue: 0,
+        maxValue: 5.5,
         majorTicks: [
-            "-1",
-            "-0.8",
-            "-0.6",
-            "-0.4",
-            "-0.2",
             "0",
-            "0.2",
-            "0.4",
-            "0.6",
-            "0.8",
-            "1.0"
+            "0.5",
+            "1",
+            "1.5",
+            "2",
+            "2.5",
+            "3",
+            "3.5",
+            "4",
+            "4.5",
+            "5",
+            "5.5"
         ],
         minorTicks: 2,
         strokeTicks: true,
         highlights: [{
-            "from": -1,
-            "to": 1,
+            "from": 0,
+            "to": 5.5,
             "color": "rgba(200, 50, 50, .75)"
         }],
         colorPlate: "#fff",
@@ -62,6 +63,52 @@
     });
     gauge.value = "0";
     gauge.draw();
+
+
+    var gauge2 = new RadialGauge({
+        renderTo: 'canvasID2',
+        width: 300,
+        height: 300,
+        units: "Druhy signal",
+        minValue: 0,
+        maxValue: 5.5,
+        majorTicks: [
+            "0",
+            "0.5",
+            "1",
+            "1.5",
+            "2",
+            "2.5",
+            "3",
+            "3.5",
+            "4",
+            "4.5",
+            "5",
+            "5.5"
+        ],
+        minorTicks: 2,
+        strokeTicks: true,
+        highlights: [{
+            "from": 0,
+            "to": 5.5,
+            "color": "rgba(200, 50, 50, .75)"
+        }],
+        colorPlate: "#fff",
+        borderShadowWidth: 0,
+        borders: false,
+        needleType: "arrow",
+        needleWidth: 2,
+        needleCircleSize: 7,
+        needleCircleOuter: true,
+        needleCircleInner: false,
+        animationDuration: 0,
+        animationRule: "linear"
+    });
+    gauge2.value = "0";
+    gauge2.draw();
+
+
+
 
     namespace = '/test';
     var socket = null;
@@ -99,20 +146,23 @@
             });
 
             socket.on('my_response', function(msg) {
-                console.log(msg.data);
                 if (msg.data == "Connected" || msg.data == "Disconnected") {
                     $("#log").append(msg.data + "<br>");
                 } else if (msg.ampl == 1) {
                     $("#log").append("Amplituda: " + msg.data + "<br>");
                 } else {
                     $('#log').append('Poradie: ' + msg.count + ' \tPrvy signal: ' + msg.data + ' \tDruhy signal:' + msg.data2 + '<br>').html();
+                    //var tempArray ={"x":msg.count,"y":msg.data.trim(),"y2":msg.data2.trim()};
+                   // pole.push(tempArray);
                 }
-
-
-                //prva + stvrta ulhoa
+                
                 x.push(parseFloat(msg.time));
                 y2.push(parseFloat(msg.data2));
                 y.push(parseFloat(msg.data));
+
+
+                //prva + stvrta ulhoa
+                
                 trace = {
                     x: x,
                     y: y,
@@ -136,7 +186,7 @@
                     }
                 };
 
-                console.log(trace);
+                
                 var traces = new Array();
                 traces.push(trace);
                 traces.push(trace2);
@@ -144,16 +194,19 @@
 
                 //uloha 2
                 gauge.value = msg.data;
-
+                gauge2.value = msg.data2;
             });
             vec.val("stop")
             vec.text("CLOSE");
         } else {
             $('form#emit').hide();
+            $('#buttonVal').hide();
             socket.emit('disconnect_request');
             vec.val("start");
             vec.text("OPEN");
         }
+        
+        
     })
 
     $(function() {
@@ -161,7 +214,17 @@
             event: "mouseover"
         });
     });
-
+    //$("#send").click(function() {
+        //$.ajax({
+            //type: "POST",
+           // url: "dbdata",
+           // data:{"data":pole},
+           // dataType: "text"
+           // success:function(data) {}})
+        
+   // console.log("vsetkok")
+       // })
+    
 });
     </script>
 </head>
@@ -178,11 +241,12 @@
             <h1>Hodnoty</h1>
             <form id="emit" method="POST" action='#'>
                 <h2>Send:</h2>
-                <input type="text" name="emit_value" id="emit_value" placeholder="Amplituda">
+                <input type="text" name="emit_value" id="emit_value" placeholder="Zadaj V ustalenia">
                 <input type="submit" value="Send">
             </form>
             <button id="buttonVal" type="submit" value="start">Start</button>
             <button id="button" value="start">Open</button>
+           
             <h2>Receive:</h2>
             <div id="log"></div>
         </div>
@@ -191,8 +255,9 @@
             <div id="plotdiv" style="width:600px;height:250px;"></div>
         </div>
         <div id="tabs-3">
-          <h1>ciselnicek<h1>
-            <canvas id="canvasID"></canvas>
+          <h1>ciselnicek</h1>
+            <canvas id="canvasID"></canvas> 
+            <canvas id="canvasID2"></canvas>
         </div>
     </div>
 
