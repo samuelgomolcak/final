@@ -1,11 +1,12 @@
 char c;
-int PWMpin = 11;
-float U, i, x, y;
+int PWMpin_RC = 11;
+int PWMpin_RC_1 = 10;
+float U_RC, U_RC_1, i, x_RC, y_RC_1;
 unsigned long currentTime, previousTime;
 double elapsedTime;
 float error,last,cum, rate;
-float sp2, sp1;
-float output;
+float sp1;
+float output_RC,output_RC_1;
 float P = 13;
 float I = 0.0066;
 float D = 5;
@@ -25,10 +26,10 @@ return out;
 }
 
 void setup() {
-pinMode(PWMpin, OUTPUT);
+pinMode(PWMpin_RC, OUTPUT);
+pinMode(PWMpin_RC_1, OUTPUT);
 Serial.begin(9600);
 
-sp2=0;
 }
 
 void loop() {
@@ -40,22 +41,41 @@ sp1 = float(c);
 sp1=sp1-48;
 }
 
-U=analogRead(A0);
-output = PID(U*0.004882, sp1);
-if (output>5){
-output=5;
+U_RC=analogRead(A0);
+output_RC = PID(U_RC*0.004882, sp1);
+if (output_RC>5){
+output_RC=5;
 }
-if (output<0){
-output=0;
+if (output_RC<0){
+output_RC=0;
 }
-analogWrite(PWMpin,(output)*51);
-x=U*0.004882;
-y=U*0.0088;
+analogWrite(PWMpin_RC,(output_RC)*51);
+x_RC=U_RC*0.004882;
 
-if ((c == 57)&&(x>0)) {
-Serial.print(x);
+
+
+
+
+
+U_RC_1=analogRead(A1);
+output_RC_1 = PID(U_RC_1*0.004882, sp1);
+if (output_RC_1>5){
+output_RC_1=5;
+}
+if (output_RC_1<0){
+output_RC_1=0;
+}
+analogWrite(PWMpin_RC_1,(output_RC_1)*51);
+y_RC_1=U_RC_1*0.004882;
+
+
+
+
+
+if ((c == 57)&&(x_RC>0)) {
+Serial.print(x_RC);
 Serial.print(",");
-Serial.println(y);
+Serial.println(y_RC_1);
 }
 delay(50);
 
