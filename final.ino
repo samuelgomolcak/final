@@ -69,7 +69,7 @@ analogWrite(PWMpin_RC_1,(output_RC_1)*51);
 y_RC_1=U_RC_1*0.004882; //vystup prvého RC obvodu
 
 //zápis výstupov
-if ((c == 57)&&(x_RC>0)) {
+if ((c ==57 )&&(x_RC>0)) {
 Serial.print(x_RC);
 Serial.print(",");
 Serial.println(y_RC_1);
