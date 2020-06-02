@@ -91,7 +91,7 @@
         highlights: [{
             "from": 0,
             "to": 5.5,
-            "color": "rgba(200, 50, 50, .75)"
+            "color": "rgba(65, 105, 225, .75)"
         }],
         colorPlate: "#fff",
         borderShadowWidth: 0,
@@ -161,7 +161,7 @@
                 y.push(parseFloat(msg.data));
 
 
-                //prva + stvrta ulhoa
+                //graf
                 
                 trace = {
                     x: x,
@@ -192,7 +192,7 @@
                 traces.push(trace2);
                 Plotly.newPlot($('#plotdiv')[0], traces, layout);
 
-                //uloha 2
+                //ciferniky
                 gauge.value = msg.data;
                 gauge2.value = msg.data2;
             });
@@ -241,7 +241,7 @@
             <h1>Hodnoty</h1>
             <form id="emit" method="POST" action='#'>
                 <h2>Send:</h2>
-                <input type="text" name="emit_value" id="emit_value" placeholder="Zadaj V ustalenia">
+                <input type="text" name="emit_value" id="emit_value" placeholder="Zadaj hodnotu ustalenia">
                 <input type="submit" value="Send">
             </form>
             <button id="buttonVal" type="submit" value="start">Start</button>
@@ -255,7 +255,7 @@
             <div id="plotdiv" style="width:600px;height:250px;"></div>
         </div>
         <div id="tabs-3">
-          <h1>ciselnicek</h1>
+          <h1>Rucickove ukazovatele</h1>
             <canvas id="canvasID"></canvas> 
             <canvas id="canvasID2"></canvas>
         </div>

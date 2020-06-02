@@ -38,8 +38,7 @@ def background_thread(args):
     dataList = []  
     db = MySQLdb.connect(host=myhost,user=myuser,passwd=mypasswd,db=mydb)
     while True:
-        #ser.write(str(int(9)))
-        socketio.sleep(2)
+        socketio.sleep(0.5)
         if dict(args).get('A') is not None:
            A = dict(args).get('A')
            A = int(A)
